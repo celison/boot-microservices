@@ -1,0 +1,65 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+plugins {
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group = 'dev.elison'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.RELEASE'
+    }
+}
+
+dependencies {
+    implementation project(':taskCommon')
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task npmInstall(type: Exec) {
+    inputs.file("package.json")
+    outputs.file("package-lock.json")
+    outputs.dir("node_modules")
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        commandLine "cmd", "/c", "npm", "install"
+    } else {
+        commandLine "npm", "install"
+    }
+}
+
+task webpack(type: Exec) {
+    inputs.file("package-lock.json")
+    inputs.file("webpack.config.js")
+    inputs.dir("src/main/js")
+    outputs.dir("src/main/resources/static/js/")
+
+    dependsOn npmInstall
+
+    commandLine "$projectDir/node_modules/.bin/webpack${Os.isFamily(Os.FAMILY_WINDOWS) ? ".cmd" : ""}"
+}
+
+compileJava {
+    dependsOn webpack
+}

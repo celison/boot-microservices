@@ -1,0 +1,11 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }}
+
+plugins {
+    id "base"
+}
+
+version "0.0.1"
+group "dev.elison"

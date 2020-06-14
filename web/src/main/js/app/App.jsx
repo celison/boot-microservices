@@ -10,6 +10,7 @@ import ListItem from "@material-ui/core/ListItem";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Event, Home, Menu} from "@material-ui/icons";
 import {CalendarMain} from "./calendar/CalendarMain";
+import {PollMain} from "./poll/PollMain"
 
 const drawerWidth = 240;
 
@@ -44,6 +45,8 @@ const renderPage = (page) => {
             return <TaskMain/>;
         case 'calendar':
             return <CalendarMain/>;
+        case 'poll':
+            return <PollMain/>;
     }
 };
 
@@ -79,6 +82,10 @@ export const App = () => {
                 <ListItem button onClick={() => setSelectedPage('calendar')}>
                     <ListItemIcon><Event/></ListItemIcon>
                     <ListItemText>Calendar</ListItemText>
+                </ListItem>
+                <ListItem button onClick={() => setSelectedPage('poll')}>
+                    <ListItemIcon><Event/></ListItemIcon>
+                    <ListItemText>Poll</ListItemText>
                 </ListItem>
             </List>
         </Drawer>

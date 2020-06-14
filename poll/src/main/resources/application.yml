@@ -1,12 +1,13 @@
 server:
-  port: ${PORT:8089}
+  port: ${PORT:8090}
 spring:
   jpa:
     database: postgresql
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+#      ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:
@@ -14,6 +15,6 @@ spring:
             non_contextual_creation: true
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/taskApp
+    url: jdbc:postgresql://localhost:5432/pollApp
     username: postgres
     password: example

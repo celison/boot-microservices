@@ -11,6 +11,13 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Event, Home, Menu} from "@material-ui/icons";
 import {CalendarMain} from "./calendar/CalendarMain";
 import {PollMain} from "./poll/PollMain"
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useLocation,
+} from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -37,61 +44,67 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const renderPage = (page) => {
-    switch (page.toLowerCase()) {
-        case 'home':
-            return <HomeMain/>;
-        case 'task':
-            return <TaskMain/>;
-        case 'calendar':
-            return <CalendarMain/>;
-        case 'poll':
-            return <PollMain/>;
-    }
-};
+function ListItemLink(props) {
+    const {icon, primary, to} = props;
 
-export const App = () => {
-    const [selectedPage, setSelectedPage] = useState("home");
-    const classes = useStyles();
+    const renderLink = React.useMemo(
+        () => React.forwardRef((itemProps, ref) => <Link to={to} ref={ref} {...itemProps} />),
+        [to],
+    );
 
     return (
-    <div className={classes.root}>
-        <Header
-            className={classes.header}
-            selectedPage={selectedPage}
-        />
-        <Drawer
-            className={classes.drawer}
-            classes={{
-                paper: classes.drawerPaper
-            }}
-            variant="permanent"
-            anchor="left"
-        >
-            <div className={classes.toolbar}/>
-            <Divider/>
-            <List>
-                <ListItem button onClick={() => setSelectedPage('home')}>
-                    <ListItemIcon><Home/></ListItemIcon>
-                    <ListItemText>Home</ListItemText>
-                </ListItem>
-                <ListItem button onClick={() => setSelectedPage('task')}>
-                    <ListItemIcon><Menu/></ListItemIcon>
-                    <ListItemText>Tasks</ListItemText>
-                </ListItem>
-                <ListItem button onClick={() => setSelectedPage('calendar')}>
-                    <ListItemIcon><Event/></ListItemIcon>
-                    <ListItemText>Calendar</ListItemText>
-                </ListItem>
-                <ListItem button onClick={() => setSelectedPage('poll')}>
-                    <ListItemIcon><Event/></ListItemIcon>
-                    <ListItemText>Poll</ListItemText>
-                </ListItem>
-            </List>
-        </Drawer>
-        <main className={classes.content}>
-            <div className={classes.toolbar}/>
-            {renderPage(selectedPage)}
-        </main>
-    </div>
-)};
+        <li>
+            <ListItem button component={renderLink}>
+                {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+                <ListItemText primary={primary}/>
+            </ListItem>
+        </li>
+    );
+}
+
+export const App = () => {
+    const classes = useStyles();
+    const location = useLocation();
+    return (
+        <div className={classes.root}>
+            <Header
+                className={classes.header}
+                selectedPage={location.pathname}
+            />
+            <Drawer
+                className={classes.drawer}
+                classes={{
+                    paper: classes.drawerPaper
+                }}
+                variant="permanent"
+                anchor="left"
+            >
+                <div className={classes.toolbar}/>
+                <Divider/>
+                <List>
+                    <ListItemLink to="/home" primary="Home" icon={<Home/>}/>
+                    <ListItemLink to="/task" primary="Tasks" icon={<Menu/>}/>
+                    <ListItemLink to="/calendar" primary="Calendar" icon={<Event/>}/>
+                    <ListItemLink to="/poll" primary="Poll" icon={<Event/>}/>
+                </List>
+            </Drawer>
+            <main className={classes.content}>
+                <div className={classes.toolbar}/>
+                <Switch>
+                    <Route path="/home">
+                        <HomeMain/>
+                    </Route>
+                    <Route path="/task">
+                        <TaskMain/>
+                    </Route>
+                    <Route path="/calendar">
+                        <CalendarMain/>
+                    </Route>
+                    <Route path="/poll">
+                        <PollMain/>
+                    </Route>
+                </Switch>
+            </main>
+        </div>
+    )
+};

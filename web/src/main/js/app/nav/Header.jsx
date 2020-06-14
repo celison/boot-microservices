@@ -12,12 +12,14 @@ const useStyles = makeStyles((theme) => ({
 
 const getHeaderForSelectedPage = (selectedPage) => {
     switch (selectedPage) {
-        case 'home':
-            return "Home Page";
-        case 'task':
-            return "Tasks";
-        case 'calendar':
-            return "Calendar";
+        case '/home':
+            return 'Home Page';
+        case '/task':
+            return 'Tasks';
+        case '/calendar':
+            return 'Calendar';
+        case '/poll':
+            return 'Poll';
     }
 };
 

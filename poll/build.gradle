@@ -40,4 +40,5 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+    testImplementation 'com.h2database:h2'
 }

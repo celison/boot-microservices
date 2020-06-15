@@ -11,7 +11,7 @@ public class Choice {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String choiceText;
-    private Long votes;
+    private Long votes = 0L;
     @ManyToOne
     @JsonBackReference
     private Question question;

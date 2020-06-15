@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -48,5 +49,9 @@ public class Question {
 
     public void setChoices(Set<Choice> choices) {
         this.choices = choices;
+    }
+
+    public Optional<Choice> getChoice(Long id) {
+        return getChoices().stream().filter(choice -> choice.getId().equals(id)).findAny();
     }
 }

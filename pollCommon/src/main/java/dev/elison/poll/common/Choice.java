@@ -40,6 +40,11 @@ public class Choice {
         this.votes = votes;
     }
 
+    public Choice vote() {
+        votes++;
+        return this;
+    }
+
     public Question getQuestion() {
         return question;
     }

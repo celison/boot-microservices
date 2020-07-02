@@ -3,6 +3,7 @@ package dev.elison.poll.common;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Choice {
@@ -15,6 +16,13 @@ public class Choice {
     @ManyToOne
     @JsonBackReference
     private Question question;
+
+    public Choice() {
+    }
+
+    public Choice(String choiceText) {
+        this.choiceText = choiceText;
+    }
 
     public Long getId() {
         return id;
@@ -51,5 +59,18 @@ public class Choice {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Choice choice = (Choice) o;
+        return id.equals(choice.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

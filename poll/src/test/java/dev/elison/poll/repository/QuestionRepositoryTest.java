@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,8 +31,7 @@ public class QuestionRepositoryTest {
     @Test
     public void whenFindPubDateLessThanEqual_thenReturnPublished() {
         // given
-        Question past = new Question();
-        past.setPubDate(Instant.now().plus(-1, ChronoUnit.DAYS));
+        Question past = new Question("Test", Instant.now().plus(-1, ChronoUnit.DAYS), Collections.emptySet());
         entityManager.persist(past);
         Question future = new Question();
         future.setPubDate(Instant.now().plus(1, ChronoUnit.DAYS));

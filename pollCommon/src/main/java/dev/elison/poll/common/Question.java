@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,6 +19,15 @@ public class Question {
     @OneToMany(mappedBy = "question")
     @JsonManagedReference
     private Set<Choice> choices;
+
+    public Question() {
+    }
+
+    public Question(String questionText, Instant pubDate, Set<Choice> choices) {
+        this.questionText = questionText;
+        this.pubDate = pubDate;
+        this.choices = choices;
+    }
 
     public Long getId() {
         return id;
@@ -48,10 +58,15 @@ public class Question {
     }
 
     public void setChoices(Set<Choice> choices) {
-        this.choices = choices;
+        this.choices = new HashSet<>(choices);
     }
 
     public Optional<Choice> getChoice(Long id) {
         return getChoices().stream().filter(choice -> choice.getId().equals(id)).findAny();
+    }
+
+    public void addChoice(Choice choice) {
+        choice.setQuestion(this);
+        choices.add(choice);
     }
 }

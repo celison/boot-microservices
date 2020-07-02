@@ -1,9 +1,12 @@
 package dev.elison.poll.controller;
 
+import dev.elison.poll.common.Choice;
 import dev.elison.poll.common.Question;
 import dev.elison.poll.common.Vote;
 import dev.elison.poll.service.QuestionService;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/question")
@@ -16,12 +19,17 @@ public class QuestionController {
 
     @GetMapping("/")
     public Iterable<Question> getQuestions() {
-        return questionService.getRecentQuestions();
+        return questionService.getRecentQuestions(Instant.now());
     }
 
     @GetMapping("/{id}")
     public Question getQuestion(@PathVariable("id") Long id) {
         return questionService.getQuestionById(id);
+    }
+
+    @PostMapping("/{id}/choice")
+    public void addChoice(@PathVariable("id") Long id, @RequestBody Choice choice) {
+        questionService.addChoice(id, choice);
     }
 
     @PostMapping("/{id}/vote")

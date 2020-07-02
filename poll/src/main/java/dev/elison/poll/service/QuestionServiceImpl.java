@@ -3,6 +3,7 @@ package dev.elison.poll.service;
 import dev.elison.poll.common.Choice;
 import dev.elison.poll.common.Question;
 import dev.elison.poll.common.Vote;
+import dev.elison.poll.repository.ChoiceRepository;
 import dev.elison.poll.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,14 +17,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Service
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
+    private final ChoiceRepository choiceRepository;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, ChoiceRepository choiceRepository) {
         this.questionRepository = questionRepository;
-    }
-
-    @Override
-    public Iterable<Question> getRecentQuestions() {
-        return getRecentQuestions(Instant.now());
+        this.choiceRepository = choiceRepository;
     }
 
     @Override
@@ -38,6 +36,17 @@ public class QuestionServiceImpl implements QuestionService {
             throw getBeforePubDateException();
         }
         return question;
+    }
+
+    @Override
+    public void addChoice(Long id, Choice choice) {
+        if (choice.getQuestion() != null) {
+            throw new ResponseStatusException(BAD_REQUEST, "Choice already has Question");
+        }
+
+        Question question = getOr404(questionRepository, id);
+        question.addChoice(choice);
+        choiceRepository.save(choice);
     }
 
     @Override

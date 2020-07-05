@@ -22,6 +22,11 @@ public class QuestionController {
         return questionService.getRecentQuestions(Instant.now());
     }
 
+    @PostMapping("/")
+    public void postQuestion(@RequestBody Question question) {
+        questionService.saveQuestion(question);
+    }
+
     @GetMapping("/{id}")
     public Question getQuestion(@PathVariable("id") Long id) {
         return questionService.getQuestionById(id);

@@ -18,9 +18,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 public class QuestionServiceImplTest {
@@ -56,12 +58,24 @@ public class QuestionServiceImplTest {
         Mockito.when(questionRepository.findByPubDateLessThanEqual(now)).thenReturn(Collections.singleton(question));
         Mockito.when(questionRepository.findById(1L)).thenReturn(Optional.of(question));
         Mockito.when(questionRepository.findById(2L)).thenReturn(Optional.of(futureQuestion));
-
     }
 
     @Test
     public void getRecentQuestions() {
         assertThat(StreamSupport.stream(questionService.getRecentQuestions(now).spliterator(), false).count()).isEqualTo(1);
+    }
+
+    @Test
+    public void saveQuestion() {
+        Choice choice = new Choice("A");
+        Question newQuestion = new Question("Question?", null, Set.of(choice));
+        questionService.saveQuestion(newQuestion);
+
+        assertThat(newQuestion.getPubDate()).isNotNull();
+
+        verify(questionRepository, times(1)).save(newQuestion);
+        verify(choiceRepository, times(1)).save(choice);
+        verifyNoMoreInteractions(questionRepository);
     }
 
     @Test

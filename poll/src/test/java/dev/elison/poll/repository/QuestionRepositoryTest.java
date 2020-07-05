@@ -1,5 +1,6 @@
 package dev.elison.poll.repository;
 
+import dev.elison.poll.common.Choice;
 import dev.elison.poll.common.Question;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,10 +33,9 @@ public class QuestionRepositoryTest {
     @Test
     public void whenFindPubDateLessThanEqual_thenReturnPublished() {
         // given
-        Question past = new Question("Test", Instant.now().plus(-1, ChronoUnit.DAYS), Collections.emptySet());
+        Question past = new Question("Test", Instant.now().plus(-1, ChronoUnit.DAYS), Set.of(new Choice("A")));
         entityManager.persist(past);
-        Question future = new Question();
-        future.setPubDate(Instant.now().plus(1, ChronoUnit.DAYS));
+        Question future = new Question("Test2", Instant.now().plus(1, ChronoUnit.DAYS), Set.of(new Choice("B")));
         entityManager.persist(future);
         entityManager.flush();
 

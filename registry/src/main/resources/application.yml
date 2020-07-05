@@ -2,8 +2,11 @@ server:
   port: ${PORT:8761}
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: registry
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
   client:
     registerWithEureka: false
     fetchRegistry: false
-    server:
-      waitTimeInMsWhenSyncEmpty: 0

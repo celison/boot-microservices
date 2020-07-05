@@ -30,6 +30,15 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public void saveQuestion(Question question) {
+        if (question.getPubDate() == null) {
+            question.setPubDate(Instant.now());
+        }
+        questionRepository.save(question);
+        question.getChoices().forEach(choiceRepository::save);
+    }
+
+    @Override
     public Question getQuestionById(Long id) {
         Question question = getOr404(questionRepository, id);
         if (Instant.now().isBefore(question.getPubDate())) {

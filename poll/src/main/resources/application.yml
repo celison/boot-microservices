@@ -6,8 +6,8 @@ spring:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: update
-#      ddl-auto: create-drop
+#      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:
@@ -15,6 +15,10 @@ spring:
             non_contextual_creation: true
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/pollApp
+    url: jdbc:postgresql://poll-db:5432/postgres
     username: postgres
     password: example
+eureka:
+  client:
+    service-url:
+      defaultZone: http://registry:8761/eureka/

@@ -1,0 +1,63 @@
+version: '3.0'
+services:
+  task:
+    build: ./task
+    ports:
+      - "8089:8089"
+    volumes:
+      - "task-data:/var/lib/task"
+    depends_on:
+      - registry
+      - task-db
+    networks:
+      network:
+  registry:
+    build: ./registry
+    ports:
+      - "8761:8761"
+    volumes:
+      - "registry-data:/var/lib/registry"
+    networks:
+      network:
+  poll:
+    build: ./poll
+    ports:
+      - "8090:8090"
+    volumes:
+      - "registry-data:/var/lib/registry"
+    depends_on:
+      - poll-db
+      - registry
+    networks:
+      network:
+  web:
+    build: ./web
+    ports:
+      - "8080:8080"
+    volumes:
+      - "registry-data:/var/lib/registry"
+    depends_on:
+      - registry
+    networks:
+      network:
+  poll-db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+    networks:
+      network:
+  task-db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5433:5432
+    networks:
+      network:
+networks:
+  network:
+volumes:
+  task-data:
+  registry-data:

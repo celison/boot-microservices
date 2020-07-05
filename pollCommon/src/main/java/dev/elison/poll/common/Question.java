@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -21,12 +22,14 @@ public class Question {
     private Set<Choice> choices;
 
     public Question() {
+        this(null, null, Collections.emptySet());
     }
 
     public Question(String questionText, Instant pubDate, Set<Choice> choices) {
         this.questionText = questionText;
         this.pubDate = pubDate;
-        this.choices = choices;
+        this.choices = new HashSet<>();
+        choices.forEach(this::addChoice);
     }
 
     public Long getId() {

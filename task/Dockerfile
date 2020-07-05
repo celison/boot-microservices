@@ -1,5 +1,4 @@
 FROM openjdk:11
-COPY . /usr/src/myapp
+COPY ./build/libs/task-0.0.1-SNAPSHOT.jar /usr/src/myapp/
 WORKDIR /usr/src/myapp
-RUN ./gradlew build
-CMD ["./gradlew", "bootRun"]
+CMD ["java", "-jar", "task-0.0.1-SNAPSHOT.jar"]

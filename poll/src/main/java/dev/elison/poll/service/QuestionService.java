@@ -9,6 +9,7 @@ import java.time.Instant;
 public interface QuestionService {
     Iterable<Question> getRecentQuestions(Instant before);
 
+    void saveQuestion(Question question);
     Question getQuestionById(Long id);
     void addChoice(Long id, Choice choice);
 

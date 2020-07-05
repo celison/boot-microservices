@@ -66,7 +66,8 @@ public class Choice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Choice choice = (Choice) o;
-        return id.equals(choice.id);
+        return Objects.equals(id, choice.id)
+                && Objects.equals(choiceText, choice.choiceText);
     }
 
     @Override

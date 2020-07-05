@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -68,6 +69,20 @@ public class QuestionControllerTest {
         mockMvc.perform(get("/question/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
+    public void postQuestion() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        Question question = new Question("Question?", null, Set.of(new Choice("A"), new Choice("B")));
+        String requestJson = ow.writeValueAsString(question);
+
+        mockMvc.perform(post("/question/")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON)).
+                andExpect(status().isOk());
     }
 
     @Test
